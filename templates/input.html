@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Loan Application</title>
+
+<style>
+*{
+box-sizing:border-box;
+max-width:100%;
+}
+
+body{
+font-family:Arial;
+background:#f4f4f4;
+display:flex;
+justify-content:center;
+align-items:flex-start;
+padding:40px;
+margin:0;
+overflow-x:hidden;
+}
+
+.container{
+background:white;
+padding:40px;
+border-radius:30px;
+max-width:760px;
+width:100%;
+box-shadow:0 10px 25px rgba(0,0,0,0.15);
+overflow:hidden;
+position:relative;
+}
+
+h2{text-align:center;margin-bottom:25px;}
+
+table{
+width:100%;
+table-layout:fixed;
+border-collapse:collapse;
+}
+
+td{
+padding:10px;
+overflow:hidden;
+}
+
+form{
+width:100%;
+max-width:100%;
+}
+
+input,select{
+width:100%;
+padding:10px;
+border-radius:10px;
+border:1px solid #ccc;
+box-sizing:border-box;
+max-width:100%;
+}
+
+input[type="number"]{
+-moz-appearance:textfield;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button{
+-webkit-appearance:none;
+margin:0;
+}
+
+button{
+padding:10px 18px;
+border-radius:14px;
+border:none;
+background:black;
+color:white;
+cursor:pointer;
+}
+
+.phone-row{
+display:flex;
+gap:10px;
+align-items:center;
+max-width:100%;
+flex-wrap:nowrap;
+}
+
+.phone-row select{
+flex-shrink:0;
+width:auto;
+min-width:100px;
+}
+
+.phone-row input{
+flex:1;
+min-width:0;
+}
+
+.phone-row button{
+flex-shrink:0;
+white-space:nowrap;
+}
+.otp-row{
+margin-top:12px;
+max-width:100%;
+overflow:hidden;
+}
+
+.otp-controls{
+display:flex;
+gap:12px;
+margin-top:10px;
+align-items:center;
+max-width:100%;
+flex-wrap:wrap;
+}
+
+.error{color:red;font-size:12px;}
+.success{color:green;font-size:12px;}
+.hidden{display:none;}
+</style>
+</head>
+
+<body>
+<div class="container">
+<h2>Loan Application Form</h2>
+
+<form action="/result" method="POST" onsubmit="return validateSubmit()">
+
+<table>
+
+<tr>
+<td>Applicant Name</td>
+<td><input type="text" name="name" required></td>
+</tr>
+
+<tr>
+<td>Phone Number</td>
+<td>
+<div class="phone-row">
+<select id="country_code" name="country_code" onchange="updateCountry(this)">
+<option value="+91" data-len="10">🇮🇳 +91</option>
+<option value="+1" data-len="10">🇺🇸 +1</option>
+<option value="+44" data-len="10">🇬🇧 +44</option>
+<option value="+971" data-len="9">🇦🇪 +971</option>
+<option value="+61" data-len="9">🇦🇺 +61</option>
+</select>
+
+<input type="tel" id="phone" name="phone" required>
+<button type="button" onclick="sendOTP()">Send OTP</button>
+</div>
+
+<div id="phone_error" class="error"></div>
+
+<div class="otp-row hidden" id="otpBlock">
+<input type="number" id="otpInput" placeholder="Enter OTP">
+<div class="otp-controls">
+<button type="button" onclick="verifyOTP()">Verify OTP</button>
+<button type="button" onclick="sendOTP()">Resend OTP</button>
+</div>
+<div id="otpStatus"></div>
+</div>
+
+</td>
+</tr>
+
+<tr>
+<td>Loan Amount (₹)</td>
+<td><input type="number" name="loan" required></td>
+</tr>
+
+<tr>
+<td>Loan Purpose</td>
+<td>
+<select name="loan_purpose" id="purpose" required onchange="populateTenure()">
+<option value="" disabled selected>Select Loan Type</option>
+<option value="education">Education</option>
+<option value="home">Home</option>
+<option value="personal">Personal</option>
+<option value="business">Business</option>
+<option value="medical">Medical</option>
+<option value="luxury">Luxury</option>
+</select>
+</td>
+</tr>
+
+<tr>
+<td>Repayment Tenure</td>
+<td>
+<select name="tenure" id="tenure" required>
+<option disabled selected>Select loan purpose first</option>
+</select>
+</td>
+</tr>
+
+<tr>
+<td>Existing Debt</td>
+<td><input type="number" name="debt"></td>
+</tr>
+
+<tr>
+<td>Employment Type</td>
+<td>
+<select name="employment" id="employment" onchange="handleStudent()" required>
+<option disabled selected>Select</option>
+<option value="salaried">Salaried</option>
+<option value="self">Self Employed</option>
+<option value="student">Student</option>
+<option value="unemployed">Unemployed</option>
+</select>
+</td>
+</tr>
+
+<tr>
+<td>Annual Income</td>
+<td><input type="number" id="income" name="income" required></td>
+</tr>
+
+<tr id="parentRow" class="hidden">
+<td>Parent Annual Income</td>
+<td><input type="number" id="parent_income" name="parent_income"></td>
+</tr>
+
+<tr>
+<td>Collateral Type</td>
+<td>
+<select id="collateral" name="property_type" onchange="handleCollateral()">
+<option value="none" selected>None</option>
+<option value="gold">Gold</option>
+<option value="house">House</option>
+<option value="land">Land</option>
+</select>
+</td>
+</tr>
+
+<tr>
+<td>Collateral Value</td>
+<td><input type="number" id="collateralValue" name="property_value" disabled></td>
+</tr>
+
+</table>
+
+<br>
+<button type="submit">Run Credit Simulation</button>
+
+</form>
+</div>
+
+<script>
+
+let phoneLength=10;
+let otp="123456"; // fixed demo OTP
+let verified=false;
+
+/* COUNTRY */
+function updateCountry(sel){
+phoneLength=parseInt(sel.options[sel.selectedIndex].dataset.len);
+}
+
+/* OTP */
+function sendOTP(){
+let phone=document.getElementById("phone").value.trim();
+document.getElementById("phone_error").innerText="";
+
+if(phone.length!==phoneLength){
+document.getElementById("phone_error").innerText="Invalid phone number length";
+return;
+}
+
+alert("Demo OTP is 123456");
+document.getElementById("otpBlock").classList.remove("hidden");
+}
+
+function verifyOTP(){
+let val=document.getElementById("otpInput").value;
+if(val==="123456"){
+verified=true;
+document.getElementById("otpStatus").innerHTML="<span class='success'>Verified ✓</span>";
+}else{
+document.getElementById("otpStatus").innerHTML="<span class='error'>Incorrect OTP</span>";
+}
+}
+
+function validateSubmit(){
+if(!verified){
+alert("OTP not verified — continuing in demo mode");
+}
+return true;
+}
+
+/* STUDENT */
+function handleStudent(){
+let emp=document.getElementById("employment").value;
+let income=document.getElementById("income");
+let parentRow=document.getElementById("parentRow");
+
+if(emp==="student"){
+income.disabled=true;
+income.required=false;
+income.value="";
+parentRow.classList.remove("hidden");
+}else{
+income.disabled=false;
+income.required=true;
+parentRow.classList.add("hidden");
+}
+}
+
+/* COLLATERAL */
+function handleCollateral(){
+let col=document.getElementById("collateral").value;
+let val=document.getElementById("collateralValue");
+
+if(col==="none"){
+val.disabled=true;
+val.value="";
+}else{
+val.disabled=false;
+}
+}
+
+/* TENURE */
+function populateTenure(){
+let purpose=document.getElementById("purpose").value;
+let tenure=document.getElementById("tenure");
+
+tenure.innerHTML="";
+
+let ranges={
+education:[5,15],
+home:[5,30],
+personal:[1,5],
+business:[3,10],
+medical:[2,6],
+luxury:[1,3]
+};
+
+let r=ranges[purpose];
+for(let i=r[0];i<=r[1];i++){
+let opt=document.createElement("option");
+opt.value=i;
+opt.text=i+" years";
+tenure.appendChild(opt);
+}
+}
+
+</script>
+
+</body>
+</html>

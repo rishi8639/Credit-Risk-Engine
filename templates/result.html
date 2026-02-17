@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>AI Credit Decision Report</title>
+
+<style>
+body{
+    font-family:Arial;
+    background:#f4f6fb;
+    padding:40px;
+}
+
+.container{
+    background:white;
+    padding:30px;
+    border-radius:20px;
+    width:900px;
+    margin:auto;
+}
+
+h1{
+    text-align:center;
+    margin-bottom:30px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:10px;
+}
+
+td{
+    padding:12px;
+    border-bottom:1px solid #e3e3e3;
+}
+
+.section{
+    margin-top:30px;
+}
+
+.buttons{
+    text-align:center;
+    margin-top:30px;
+}
+
+button{
+    padding:12px 25px;
+    margin:10px;
+    border:none;
+    border-radius:10px;
+    background:#0a66ff;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#0046b8;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>💳 AI-Driven Credit Risk Decision Report</h1>
+
+<h2>Final Decision</h2>
+<table>
+
+<tr>
+<td><strong>Applicant Name</strong></td>
+<td>{{ applicant_name }}</td>
+</tr>
+
+<tr>
+<td><strong>Phone Number</strong></td>
+<td>{{ phone_number }}</td>
+</tr>
+
+<tr>
+<td>Decision</td>
+<td>{{ final_decision }}</td>
+</tr>
+
+<tr>
+<td>Risk Probability</td>
+<td>{{ risk_probability }} %</td>
+</tr>
+
+<tr>
+<td>Eligible Loan Amount</td>
+<td>₹ {{ eligible_loan_amount }}</td>
+</tr>
+
+</table>
+
+
+<div class="section">
+<h2>Repayment Feasibility</h2>
+<table>
+<tr><td>Loan Purpose</td><td>{{ loan_purpose }}</td></tr>
+<tr><td>Interest Rate</td><td>{{ interest_percent }} %</td></tr>
+<tr><td>Repayment Tenure</td><td>{{ repayment_tenure }} years</td></tr>
+<tr><td>Monthly EMI</td><td>₹ {{ monthly_emi }}</td></tr>
+<tr><td>Monthly Repayment Capacity</td><td>₹ {{ monthly_capacity }}</td></tr>
+<tr><td>Total Amount Payable</td><td>₹ {{ total_payable }}</td></tr>
+<tr><td>Total Interest Paid</td><td>₹ {{ interest_paid }}</td></tr>
+</table>
+</div>
+
+
+<div class="section">
+<h2>Financial Ratios</h2>
+<table>
+<tr><td>DTI</td><td>{{ dti_ratio }} %</td></tr>
+<tr><td>LTV</td><td>{{ ltv_ratio }} %</td></tr>
+</table>
+</div>
+
+
+<div class="section">
+<h2>Decision Explanation</h2>
+<p>{{ decision_explanation }}</p>
+</div>
+
+
+<div class="section">
+<h2>Recommendations</h2>
+<p>{{ recommendations }}</p>
+</div>
+
+
+<div class="section">
+<h2>Applicant Inputs</h2>
+<table>
+<tr><td>Income</td><td>₹ {{ income }}</td></tr>
+<tr><td>Debt</td><td>₹ {{ debt }}</td></tr>
+<tr><td>Loan Requested</td><td>₹ {{ loan_requested }}</td></tr>
+<tr><td>Employment</td><td>{{ employment }}</td></tr>
+<tr><td>Collateral Type</td><td>{{ collateral_type }}</td></tr>
+<tr><td>Collateral Value</td><td>₹ {{ collateral_value }}</td></tr>
+</table>
+</div>
+
+
+<div class="buttons">
+<a href="/download"><button>⬇ Download Report</button></a>
+<a href="/input"><button>↺ Run Another Assessment</button></a>
+</div>
+
+</div>
+
+</body>
+</html>
